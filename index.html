@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Financiera Personal</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --text-color: #333;
+            --card-1: #3b82f6; /* Azul */
+            --card-2: #10b981; /* Verde */
+            --card-3: #f59e0b; /* Naranja */
+            --card-4: #8b5cf6; /* Morado */
+            --card-5: #ef4444; /* Rojo */
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 { margin: 0; color: #1f2937; }
+        p.subtitle { color: #6b7280; margin-top: 5px; }
+
+        /* Vistas */
+        .view { display: none; max-width: 800px; margin: 0 auto; }
+        .view.active { display: block; }
+
+        /* Tarjetones (Cards) */
+        .grid-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-top: 5px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+        }
+
+        .card h3 { margin: 15px 0 5px 0; font-size: 1.2rem; }
+        .card p { color: #6b7280; font-size: 0.9rem; margin: 0; }
+        .card-icon { font-size: 2.5rem; }
+
+        .c1 { border-color: var(--card-1); } .c1 .card-icon { color: var(--card-1); }
+        .c2 { border-color: var(--card-2); } .c2 .card-icon { color: var(--card-2); }
+        .c3 { border-color: var(--card-3); } .c3 .card-icon { color: var(--card-3); }
+        .c4 { border-color: var(--card-4); } .c4 .card-icon { color: var(--card-4); }
+        .c5 { border-color: var(--card-5); } .c5 .card-icon { color: var(--card-5); }
+
+        /* Detalle de Calculadora */
+        .detail-box {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+
+        .btn-back {
+            background: #e5e7eb;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn-back:hover { background: #d1d5db; }
+
+        .info-section {
+            background: #f9fafb;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .formula-box {
+            background: #1f2937;
+            color: #10b981;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-weight: bold; margin-bottom: 5px; }
+        .input-group small { color: #6b7280; display: block; margin-bottom: 5px; }
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+
+        .btn-calc {
+            width: 100%;
+            padding: 15px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-calc:hover { background: #2563eb; }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+        .result-box.show { display: block; }
+        .res-success { background: #d1fae5; color: #065f46; border: 1px solid #10b981; }
+        .res-danger { background: #fee2e2; color: #991b1b; border: 1px solid #ef4444; }
+        
+        .res-title { font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; }
+
+        .divider { border-top: 2px dashed #e5e7eb; margin: 30px 0; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>💰 Calculadora Financiera</h1>
+        <p class="subtitle">Domina los números de tu negocio en un clic</p>
+    </header>
+
+    <!-- VISTA PRINCIPAL: TARJETONES -->
+    <main id="view-home" class="view active">
+        <div class="grid-cards">
+            <div class="card c1" onclick="showView('calc-roi')">
+                <div class="card-icon">📈</div>
+                <h3>Calcular ROI</h3>
+                <p>¿Qué tan rentable fue mi inversión?</p>
+            </div>
+            <div class="card c2" onclick="showView('calc-interest')">
+                <div class="card-icon"></div>
+                <h3>Calcular Intereses</h3>
+                <p>Costo de préstamos o ganancias de ahorros</p>
+            </div>
+            <div class="card c3" onclick="showView('calc-breakeven')">
+                <div class="card-icon">⚖️</div>
+                <h3>Punto de Equilibrio</h3>
+                <p>¿Cuánto debo vender para no perder?</p>
+            </div>
+            <div class="card c4" onclick="showView('calc-cost')">
+                <div class="card-icon">📦</div>
+                <h3>Costo Real</h3>
+                <p>El costo oculto de tu producto</p>
+            </div>
+            <div class="card c5" onclick="showView('calc-price')">
+                <div class="card-icon">💎</div>
+                <h3>Precio y Descuentos</h3>
+                <p>Fija tu precio y calcula descuentos seguros</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- VISTA 1: ROI -->
+    <main id="view-calc-roi" class="view">
+        <div class="detail-box">
+            <button class="btn-back" onclick="showView('view-home')">⬅ Volver</button>
+            <h2>📈 Calcular ROI (Retorno de Inversión)</h2>
+            
+            <div class="info-section">
+                <strong>¿Qué es?</strong> Te dice qué tan rentable fue una inversión. Responde: "De cada peso que metí, ¿cuánto me regresó?".
+                <br><br><strong>Ejemplo real:</strong> Inviertes $1,000 en publicidad y te genera $1,500 de ganancia limpia. Tu ROI es del 50%. ¡Valió la pena!
+            </div>
+
+            <div class="formula-box">ROI = [ (Ganancia Neta - Inversión) / Inversión ] * 100</div>
+
+            <div class="input-group">
+                <label>Inversión Inicial ($)</label>
+                <small>El dinero exacto que gastaste.</small>
+                <input type="number" id="roi-inversion" placeholder="Ej. 1000">
+            </div>
+            <div class="input-group">
+                <label>Ganancia Neta ($)</label>
+                <small>Lo que entró a tu bolsillo después de pagar costos.</small>
+                <input type="number" id="roi-ganancia" placeholder="Ej. 1500">
+            </div>
+            <button class="btn-calc" onclick="calcROI()">Calcular ROI</button>
+            <div id="res-roi" class="result-box"></div>
+        </div>
+    </main>
+
+    <!-- VISTA 2: INTERESES -->
+    <main id="view-calc-interest" class="view">
+        <div class="detail-box">
+            <button class="btn-back" onclick="showView('view-home')"> Volver</button>
+            <h2>🏦 Calcular Interés Simple</h2>
+            
+            <div class="info-section">
+                <strong>¿Qué es?</strong> El "alquiler" del dinero. Si pides prestado, es lo que te cuesta. Si ahorras, es lo que ganas.
+                <br><br><strong>Ejemplo real:</strong> Pides $5,000 al 10% anual por 1 año. Pagarás $500 de interés.
+            </div>
+
+            <div class="formula-box">Interés = Capital * Tasa * Tiempo</div>
+
+            <div class="input-group">
+                <label>Capital ($)</label>
+                <small>La cantidad de dinero inicial.</small>
+                <input type="number" id="int-capital" placeholder="Ej. 5000">
+            </div>
+            <div class="input-group">
+                <label>Tasa de Interés (%)</label>
+                <small>El porcentaje. Ej: 10 para 10%.</small>
+                <input type="number" id="int-tasa" placeholder="Ej. 10">
+            </div>
+            <div class="input-group">
+                <label>Tiempo</label>
+                <small>Debe coincidir con la tasa (años, meses).</small>
+                <input type="number" id="int-tiempo" placeholder="Ej. 1">
+            </div>
+            <button class="btn-calc" onclick="calcInterest()">Calcular Interés</button>
+            <div id="res-int" class="result-box"></div>
+        </div>
+    </main>
+
+    <!-- VISTA 3: PUNTO DE EQUILIBRIO -->
+    <main id="view-calc-breakeven" class="view">
+        <div class="detail-box">
+            <button class="btn-back" onclick="showView('view-home')">⬅ Volver</button>
+            <h2>⚖️ Punto de Equilibrio</h2>
+            
+            <div class="info-section">
+                <strong>¿Qué es?</strong> La meta mínima de supervivencia. Cuántas unidades debes vender para quedar en ceros (ni ganar ni perder).
+                <br><br><strong>Ejemplo real:</strong> Si tus gastos fijos son $2,000 y ganas $40 por zapato, debes vender 50 zapatos para sobrevivir.
+            </div>
+
+            <div class="formula-box">PE (Unidades) = Costos Fijos / (Precio - Costo Variable)</div>
+
+            <div class="input-group">
+                <label>Costos Fijos Totales ($)</label>
+                <small>Renta, luz, sueldos fijos (vendas o no vendas).</small>
+                <input type="number" id="pe-fijos" placeholder="Ej. 2000">
+            </div>
+            <div class="input-group">
+                <label>Precio de Venta Unitario ($)</label>
+                <small>A cuánto vendes una unidad.</small>
+                <input type="number" id="pe-precio" placeholder="Ej. 100">
+            </div>
+            <div class="input-group">
+                <label>Costo Variable Unitario ($)</label>
+                <small>Cuánto te cuesta hacer/comprar UNA unidad.</small>
+                <input type="number" id="pe-variable" placeholder="Ej. 60">
+            </div>
+            <button class="btn-calc" onclick="calcBreakEven()">Calcular Punto de Equilibrio</button>
+            <div id="res-pe" class="result-box"></div>
+        </div>
+    </main>
+
+    <!-- VISTA 4: COSTO REAL -->
+    <main id="view-calc-cost" class="view">
+        <div class="detail-box">
+            <button class="btn-back" onclick="showView('view-home')">⬅ Volver</button>
+            <h2>📦 Costo Real de un Producto</h2>
+            
+            <div class="info-section">
+                <strong>¿Qué es?</strong> El costo total y oculto. Si solo sumas lo que pagaste al proveedor, perderás dinero.
+                <br><br><strong>Ejemplo real:</strong> Bolsa de cuero $200 + Costura $50 + Caja y luz $30 = Costo real $280.
+            </div>
+
+            <div class="formula-box">Costo Real = Materia Prima + Mano de Obra + Costos Indirectos</div>
+
+            <div class="input-group">
+                <label>Materia Prima / Costo de Compra ($)</label>
+                <small>Incluye fletes o envíos.</small>
+                <input type="number" id="costo-mp" placeholder="Ej. 200">
+            </div>
+            <div class="input-group">
+                <label>Mano de Obra Directa ($)</label>
+                <small>Costo de tiempo por unidad. Pon 0 si solo revendes.</small>
+                <input type="number" id="costo-mo" placeholder="Ej. 50">
+            </div>
+            <div class="input-group">
+                <label>Costos Indirectos / Empaque ($)</label>
+                <small>Un pedacito de renta, luz, etiqueta, bolsa.</small>
+                <input type="number" id="costo-ci" placeholder="Ej. 30">
+            </div>
+            <button class="btn-calc" onclick="calcRealCost()">Calcular Costo Real</button>
+            <div id="res-costo" class="result-box"></div>
+        </div>
+    </main>
+
+    <!-- VISTA 5: PRECIO Y DESCUENTOS -->
+    <main id="view-calc-price" class="view">
+        <div class="detail-box">
+            <button class="btn-back" onclick="showView('view-home')">⬅ Volver</button>
+            <h2>💎 Precio de Venta y Descuentos Seguros</h2>
+            
+            <div class="info-section">
+                <strong>¿Qué es?</strong> Calcula tu precio exacto para ganar el % que quieres. <strong>¡Ojo!</strong> No se le suma el % al costo, se usa esta fórmula para que el margen sea real sobre el precio final.
+                <br><br><strong>Ejemplo real:</strong> Costo $100, quieres 30% de margen. Precio = 100 / (1 - 0.30) = $142.85.
+            </div>
+
+            <div class="formula-box">Precio = Costo Total / (1 - % Margen Deseado)</div>
+
+            <h3>1. Calcula tu Precio Base</h3>
+            <div class="input-group">
+                <label>Costo Total del Producto ($)</label>
+                <input type="number" id="precio-costo" placeholder="Ej. 100">
+            </div>
+            <div class="input-group">
+                <label>Margen de Ganancia Deseado (%)</label>
+                <small>Ej: 30 para ganar el 30%.</small>
+                <input type="number" id="precio-margen" placeholder="Ej. 30">
+            </div>
+            <button class="btn-calc" onclick="calcPrice()">Calcular Precio y Zona de Descuento</button>
+            <div id="res-precio" class="result-box"></div>
+
+            <div id="discount-section" style="display:none;">
+                <div class="divider"></div>
+                <h3>2. 🛡️ Zona Segura de Descuentos</h3>
+                <p>Tu descuento máximo sin perder dinero es: <strong id="max-discount-text"></strong></p>
+                
+                <div class="input-group">
+                    <label>Prueba tu descuento promocional (%)</label>
+                    <small>Escribe el % que quieres ofrecer (Ej. Black Friday).</small>
+                    <input type="number" id="desc-prueba" placeholder="Ej. 20" oninput="calcDiscount()">
+                </div>
+                <div id="res-descuento" class="result-box"></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Navegación
+        function showView(viewId) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById('view-' + viewId).classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        // Helpers
+        const getVal = (id) => parseFloat(document.getElementById(id).value) || 0;
+        const showRes = (id, html, type) => {
+            const el = document.getElementById(id);
+            el.innerHTML = html;
+            el.className = `result-box show ${type}`;
+        };
+
+        // 1. ROI
+        function calcROI() {
+            let inv = getVal('roi-inversion');
+            let gan = getVal('roi-ganancia');
+            if(inv <= 0) return showRes('res-roi', 'Por favor ingresa una inversión válida.', 'res-danger');
+            
+            let roi = ((gan - inv) / inv) * 100;
+            let type = roi >= 0 ? 'res-success' : 'res-danger';
+            showRes('res-roi', `<div class="res-title">Tu ROI es: ${roi.toFixed(2)}%</div>${roi >= 0 ? '¡Buena inversión!' : 'Estás perdiendo dinero.'}`, type);
+        }
+
+        // 2. Interés
+        function calcInterest() {
+            let c = getVal('int-capital');
+            let i = getVal('int-tasa') / 100;
+            let t = getVal('int-tiempo');
+            let interes = c * i * t;
+            let total = c + interes;
+            showRes('res-int', `<div class="res-title">Interés a pagar/ganar: $${interes.toFixed(2)}</div>Total a devolver/recibir: $${total.toFixed(2)}`, 'res-success');
+        }
+
+        // 3. Punto de Equilibrio
+        function calcBreakEven() {
+            let cf = getVal('pe-fijos');
+            let p = getVal('pe-precio');
+            let cv = getVal('pe-variable');
+            let margen = p - cv;
+            
+            if(margen <= 0) return showRes('res-pe', 'El precio debe ser mayor al costo variable.', 'res-danger');
+            
+            let pe = cf / margen;
+            showRes('res-pe', `<div class="res-title">Debes vender: ${Math.ceil(pe)} unidades</div>Para cubrir tus $${cf} de gastos fijos. A partir de la unidad ${Math.ceil(pe)+1} empiezas a ganar.`, 'res-success');
+        }
+
+        // 4. Costo Real
+        function calcRealCost() {
+            let mp = getVal('costo-mp');
+            let mo = getVal('costo-mo');
+            let ci = getVal('costo-ci');
+            let total = mp + mo + ci;
+            showRes('res-costo', `<div class="res-title">Costo Real: $${total.toFixed(2)}</div>Materia Prima: $${mp} | Mano de Obra: $${mo} | Indirectos: $${ci}`, 'res-success');
+        }
+
+        // 5. Precio y Descuentos
+        let currentPrice = 0;
+        let currentCost = 0;
+
+        function calcPrice() {
+            currentCost = getVal('precio-costo');
+            let margin = getVal('precio-margen') / 100;
+            
+            if(margin >= 1) return showRes('res-precio', 'El margen debe ser menor al 100%', 'res-danger');
+            if(currentCost <= 0) return showRes('res-precio', 'Ingresa un costo válido.', 'res-danger');
+
+            currentPrice = currentCost / (1 - margin);
+            let profit = currentPrice - currentCost;
+
+            let html = `<div class="res-title">Precio de Venta: $${currentPrice.toFixed(2)}</div>`;
+            html += `Tu ganancia limpia será: $${profit.toFixed(2)} (${(margin*100).toFixed(0)}%)<br>`;
+            html += `<strong>🛡️ Descuento máximo sin perder: ${(margin*100).toFixed(1)}%</strong>`;
+            
+            showRes('res-precio', html, 'res-success');
+            
+            document.getElementById('discount-section').style.display = 'block';
+            document.getElementById('max-discount-text').innerText = `${(margin*100).toFixed(1)}% (Equivalente a $${profit.toFixed(2)})`;
+        }
+
+        function calcDiscount() {
+            let discount = getVal('desc-prueba');
+            if(currentPrice <= 0) return;
+
+            let finalPrice = currentPrice * (1 - (discount/100));
+            let finalProfit = finalPrice - currentCost;
+            let isSafe = finalProfit >= 0;
+
+            let html = `<div class="res-title">Precio final con descuento: $${finalPrice.toFixed(2)}</div>`;
+            if(isSafe) {
+                html += `✅ <strong>SEGURO:</strong> Aún ganas $${finalProfit.toFixed(2)} por venta.`;
+                showRes('res-descuento', html, 'res-success');
+            } else {
+                html += `❌ <strong>PELIGRO:</strong> Estás perdiendo $${Math.abs(finalProfit).toFixed(2)} por venta.`;
+                showRes('res-descuento', html, 'res-danger');
+            }
+        }
+    </script>
+</body>
+</html>
