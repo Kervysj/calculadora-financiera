@@ -4,200 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora Financiera Personal</title>
-    <style>
-        :root {
-            --bg-color: #f4f7f6;
-            --text-color: #333;
-            --card-1: #3b82f6; /* Azul */
-            --card-2: #10b981; /* Verde */
-            --card-3: #f59e0b; /* Naranja */
-            --card-4: #8b5cf6; /* Morado */
-            --card-5: #ef4444; /* Rojo */
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 20px;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        h1 { margin: 0; color: #1f2937; }
-        p.subtitle { color: #6b7280; margin-top: 5px; }
-
-        /* Vistas */
-        .view { display: none; max-width: 800px; margin: 0 auto; }
-        .view.active { display: block; }
-
-        /* Tarjetones (Cards) */
-        .grid-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px 20px;
-            text-align: center;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: transform 0.2s, box-shadow 0.2s;
-            border-top: 5px solid transparent;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
-        }
-
-        .card h3 { margin: 15px 0 5px 0; font-size: 1.2rem; }
-        .card p { color: #6b7280; font-size: 0.9rem; margin: 0; }
-        .card-icon { font-size: 2.5rem; }
-
-        .c1 { border-color: var(--card-1); } .c1 .card-icon { color: var(--card-1); }
-        .c2 { border-color: var(--card-2); } .c2 .card-icon { color: var(--card-2); }
-        .c3 { border-color: var(--card-3); } .c3 .card-icon { color: var(--card-3); }
-        .c4 { border-color: var(--card-4); } .c4 .card-icon { color: var(--card-4); }
-        .c5 { border-color: var(--card-5); } .c5 .card-icon { color: var(--card-5); }
-
-        /* Detalle de Calculadora */
-        .detail-box {
-            background: white;
-            border-radius: 15px;
-            padding: 30px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-
-        .btn-back {
-            background: #e5e7eb;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-bottom: 20px;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-        .btn-back:hover { background: #d1d5db; }
-
-        .info-section {
-            background: #f9fafb;
-            border-left: 4px solid #3b82f6;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 0 8px 8px 0;
-        }
-
-        .formula-box {
-            background: #1f2937;
-            color: #10b981;
-            padding: 15px;
-            border-radius: 8px;
-            font-family: monospace;
-            font-size: 1.1rem;
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; font-weight: bold; margin-bottom: 5px; }
-        .input-group small { color: #6b7280; display: block; margin-bottom: 5px; }
-        .input-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 1rem;
-            box-sizing: border-box;
-        }
-
-        .btn-calc {
-            width: 100%;
-            padding: 15px;
-            background: #3b82f6;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        .btn-calc:hover { background: #2563eb; }
-
-        .result-box {
-            margin-top: 20px;
-            padding: 20px;
-            border-radius: 8px;
-            display: none;
-        }
-        .result-box.show { display: block; }
-        .res-success { background: #d1fae5; color: #065f46; border: 1px solid #10b981; }
-        .res-danger { background: #fee2e2; color: #991b1b; border: 1px solid #ef4444; }
-        
-        .res-title { font-weight: bold; font-size: 1.2rem; margin-bottom: 10px; }
-
-        .divider { border-top: 2px dashed #e5e7eb; margin: 30px 0; }
-
-        /* Mejoras para Interés */
-        .example-box {
-            background: #fffbeb;
-            border: 2px solid #f59e0b;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 15px 0;
-        }
-        
-        .example-box h4 {
-            margin: 0 0 10px 0;
-            color: #d97706;
-        }
-
-        .comparison-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 15px 0;
-            font-size: 0.9rem;
-        }
-
-        .comparison-table th,
-        .comparison-table td {
-            padding: 10px;
-            text-align: left;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .comparison-table th {
-            background: #f3f4f6;
-            font-weight: bold;
-        }
-
-        .highlight {
-            background: #fef3c7;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: bold;
-        }
-
-        .tip-box {
-            background: #dbeafe;
-            border-left: 4px solid #3b82f6;
-            padding: 12px;
-            margin: 15px 0;
-            border-radius: 0 8px 8px 0;
-            font-size: 0.9rem;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -241,7 +48,7 @@
     <main id="calc-roi" class="view">
         <div class="detail-box">
             <button class="btn-back" onclick="showView('home')">⬅ Volver al inicio</button>
-            <h2>📈 Calcular ROI (Retorno de Inversión)</h2>
+            <h2> Calcular ROI (Retorno de Inversión)</h2>
             
             <div class="info-section">
                 <strong>¿Qué es?</strong> Te dice qué tan rentable fue una inversión. Responde: "De cada peso que metí, ¿cuánto me regresó?".
@@ -265,93 +72,93 @@
         </div>
     </main>
 
-    <!-- VISTA 2: INTERESES - MEJORADA -->
+    <!-- VISTA 2: INTERESES -->
     <main id="calc-interest" class="view">
         <div class="detail-box">
-            <button class="btn-back" onclick="showView('home')">⬅ Volver al inicio</button>
-            <h2>🏦 Calcular Interés Simple</h2>
+            <button class="btn-back" onclick="showView('home')"> Volver al inicio</button>
+            <h2>🏦 Calculadora de Interés Simple</h2>
             
             <div class="info-section">
-                <strong>¿Qué es el interés?</strong> Es el "alquiler" del dinero:
+                <strong>¿Qué es el interés?</strong> Es el "costo" o "ganancia" del dinero con el tiempo:
                 <ul style="margin: 10px 0 0 20px;">
-                    <li>Si <strong>pides prestado</strong>: Es lo que le pagas extra al banco</li>
-                    <li>Si <strong>ahorras o inviertes</strong>: Es lo que el banco te paga a ti</li>
+                    <li>Si <strong>pides prestado</strong>: Pagas interés (es el costo del préstamo)</li>
+                    <li>Si <strong>ahorras</strong>: Ganas interés (el banco te paga por guardar tu dinero)</li>
                 </ul>
             </div>
 
-            <div class="example-box">
-                <h4>📝 Ejemplo Fácil de Entender:</h4>
-                <p>Si pides prestados <span class="highlight">$1,000</span> al <span class="highlight">10% anual</span> por <span class="highlight">1 año</span>:</p>
-                <p>Cálculo: $1,000 × 0.10 × 1 = <strong>$100 de interés</strong></p>
-                <p>Al final del año devuelves: <strong>$1,100</strong> ($1,000 que pediste + $100 de interés)</p>
+            <!-- SELECTOR: ¿PRÉSTAMO O AHORRO? -->
+            <div class="selector-box prestamo-box">
+                <label class="selector-title">💭 ¿Qué situación quieres calcular?</label>
+                <div class="selector-options">
+                    <label class="selector-card">
+                        <input type="radio" name="tipo-operacion" value="prestamo" checked>
+                        <div class="selector-card-content">
+                            <div class="selector-card-title red">🔴 Pedir Préstamo</div>
+                            <div class="selector-card-desc">Voy a PAGAR intereses</div>
+                        </div>
+                    </label>
+                    <label class="selector-card">
+                        <input type="radio" name="tipo-operacion" value="ahorro">
+                        <div class="selector-card-content">
+                            <div class="selector-card-title green">🟢 Ahorrar/Invertir</div>
+                            <div class="selector-card-desc">Voy a GANAR intereses</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- SELECTOR: PERÍODO DE LA TASA -->
+            <div class="selector-box periodo-box">
+                <label class="selector-title">️ ¿Cada cuánto se calcula el interés?</label>
+                <div class="selector-options">
+                    <label class="selector-card small">
+                        <input type="radio" name="periodo" value="anual" checked>
+                        <div class="selector-card-content">
+                            <strong>Anual</strong> (por año)
+                        </div>
+                    </label>
+                    <label class="selector-card small">
+                        <input type="radio" name="periodo" value="mensual">
+                        <div class="selector-card-content">
+                            <strong>Mensual</strong> (por mes)
+                        </div>
+                    </label>
+                </div>
             </div>
 
             <div class="formula-box">Interés = Capital × Tasa × Tiempo</div>
 
-            <div class="tip-box">
-                <strong>💡 Consejo importante:</strong> Si la tasa es <strong>anual</strong> (por año), el tiempo debe estar en <strong>años</strong>. 
-                <br>Si la tasa es <strong>mensual</strong> (por mes), el tiempo debe estar en <strong>meses</strong>.
-            </div>
-
             <div class="input-group">
-                <label>💵 Capital o Monto Principal ($)</label>
-                <small>La cantidad de dinero que pides prestada o que ahorras.</small>
+                <label>💵 Cantidad de Dinero ($)</label>
+                <small id="label-capital">Cuánto dinero vas a pedir prestado.</small>
                 <input type="number" id="int-capital" placeholder="Ej. 5000">
             </div>
             
             <div class="input-group">
                 <label>📊 Tasa de Interés (%)</label>
-                <small>El porcentaje que te cobran (préstamo) o te pagan (ahorro). Ej: 5 para 5%.</small>
-                <input type="number" id="int-tasa" placeholder="Ej. 5">
+                <small id="label-tasa">El porcentaje que te cobrarán por año.</small>
+                <input type="number" id="int-tasa" placeholder="Ej. 10">
             </div>
             
             <div class="input-group">
-                <label>⏱️ Tiempo</label>
-                <small>¿Por cuánto tiempo? Debe coincidir con la tasa (si es anual, pon años; si es mensual, pon meses).</small>
+                <label>⏱️ Duración / Tiempo</label>
+                <small id="label-tiempo">Por cuántos años pedirás el préstamo.</small>
                 <input type="number" id="int-tiempo" placeholder="Ej. 2">
             </div>
 
-            <table class="comparison-table">
-                <tr>
-                    <th>Si es...</th>
-                    <th>Tasa</th>
-                    <th>Tiempo</th>
-                </tr>
-                <tr>
-                    <td>Interés Anual</td>
-                    <td>12% por año</td>
-                    <td>2 años</td>
-                </tr>
-                <tr>
-                    <td>Interés Mensual</td>
-                    <td>2% por mes</td>
-                    <td>6 meses</td>
-                </tr>
-            </table>
-
-            <button class="btn-calc" onclick="calcInterest()">Calcular Interés</button>
+            <button class="btn-calc" onclick="calcInterest()">Calcular</button>
             <div id="res-int" class="result-box"></div>
 
-            <div class="example-box" style="margin-top: 20px;">
-                <h4>📊 Escenarios Comunes:</h4>
-                <table class="comparison-table" style="margin: 0;">
-                    <tr>
-                        <th>Situación</th>
-                        <th>Ejemplo</th>
-                    </tr>
-                    <tr>
-                        <td>Préstamo personal</td>
-                        <td>$10,000 al 15% anual por 3 años</td>
-                    </tr>
-                    <tr>
-                        <td>Tarjeta de crédito</td>
-                        <td>$2,000 al 5% mensual por 6 meses</td>
-                    </tr>
-                    <tr>
-                        <td>Cuenta de ahorro</td>
-                        <td>$5,000 al 8% anual por 1 año</td>
-                    </tr>
-                </table>
+            <!-- EJEMPLOS -->
+            <div class="example-box">
+                <h4>💡 Ejemplo para entender:</h4>
+                <p><strong>Si pides $1,000 prestados al 10% anual por 1 año:</strong></p>
+                <p>Cálculo: $1,000 × 0.10 × 1 = <strong class="red">$100 de interés</strong></p>
+                <p>Total a devolver: <strong>$1,100</strong> ($1,000 + $100 de interés)</p>
+                <hr>
+                <p><strong>Si ahorras $1,000 al 10% anual por 1 año:</strong></p>
+                <p>Cálculo: $1,000 × 0.10 × 1 = <strong class="green">$100 que ganas</strong></p>
+                <p>Total que tendrás: <strong>$1,100</strong> ($1,000 + $100 de ganancia)</p>
             </div>
         </div>
     </main>
@@ -360,7 +167,7 @@
     <main id="calc-breakeven" class="view">
         <div class="detail-box">
             <button class="btn-back" onclick="showView('home')">⬅ Volver al inicio</button>
-            <h2>⚖️ Punto de Equilibrio</h2>
+            <h2>️ Punto de Equilibrio</h2>
             
             <div class="info-section">
                 <strong>¿Qué es?</strong> La meta mínima de supervivencia. Cuántas unidades debes vender para quedar en ceros (ni ganar ni perder).
@@ -393,7 +200,7 @@
     <main id="calc-cost" class="view">
         <div class="detail-box">
             <button class="btn-back" onclick="showView('home')">⬅ Volver al inicio</button>
-            <h2>📦 Costo Real de un Producto</h2>
+            <h2> Costo Real de un Producto</h2>
             
             <div class="info-section">
                 <strong>¿Qué es?</strong> El costo total y oculto. Si solo sumas lo que pagaste al proveedor, perderás dinero.
@@ -448,9 +255,9 @@
             <button class="btn-calc" onclick="calcPrice()">Calcular Precio y Zona de Descuento</button>
             <div id="res-precio" class="result-box"></div>
 
-            <div id="discount-section" style="display:none;">
+            <div id="discount-section" class="discount-section">
                 <div class="divider"></div>
-                <h3>2. 🛡️ Zona Segura de Descuentos</h3>
+                <h3>2. ️ Zona Segura de Descuentos</h3>
                 <p>Tu descuento máximo sin perder dinero es: <strong id="max-discount-text"></strong></p>
                 
                 <div class="input-group">
@@ -463,132 +270,6 @@
         </div>
     </main>
 
-    <script>
-        // Navegación - CORREGIDA
-        function showView(viewId) {
-            // Ocultar todas las vistas
-            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-            // Mostrar la vista seleccionada
-            document.getElementById(viewId).classList.add('active');
-            // Scroll al inicio
-            window.scrollTo(0, 0);
-        }
-
-        // Helpers
-        const getVal = (id) => parseFloat(document.getElementById(id).value) || 0;
-        const showRes = (id, html, type) => {
-            const el = document.getElementById(id);
-            el.innerHTML = html;
-            el.className = `result-box show ${type}`;
-        };
-
-        // 1. ROI
-        function calcROI() {
-            let inv = getVal('roi-inversion');
-            let gan = getVal('roi-ganancia');
-            if(inv <= 0) return showRes('res-roi', 'Por favor ingresa una inversión válida.', 'res-danger');
-            
-            let roi = ((gan - inv) / inv) * 100;
-            let type = roi >= 0 ? 'res-success' : 'res-danger';
-            showRes('res-roi', `<div class="res-title">Tu ROI es: ${roi.toFixed(2)}%</div>${roi >= 0 ? '¡Buena inversión!' : 'Estás perdiendo dinero.'}`, type);
-        }
-
-        // 2. Interés - MEJORADO
-        function calcInterest() {
-            let c = getVal('int-capital');
-            let i = getVal('int-tasa') / 100;
-            let t = getVal('int-tiempo');
-            
-            if(c <= 0) return showRes('res-int', 'Por favor ingresa un capital válido.', 'res-danger');
-            if(i <= 0) return showRes('res-int', 'Por favor ingresa una tasa de interés válida.', 'res-danger');
-            if(t <= 0) return showRes('res-int', 'Por favor ingresa un tiempo válido.', 'res-danger');
-            
-            let interes = c * i * t;
-            let total = c + interes;
-            
-            let html = `
-                <div class="res-title">💰 Interés a pagar/ganar: $${interes.toFixed(2)}</div>
-                <p><strong>Capital inicial:</strong> $${c.toFixed(2)}</p>
-                <p><strong>Interés total:</strong> $${interes.toFixed(2)}</p>
-                <p><strong style="font-size: 1.2rem; color: #065f46;">Total final: $${total.toFixed(2)}</strong></p>
-                <hr style="margin: 15px 0; border: none; border-top: 1px solid #10b981;">
-                <p style="font-size: 0.9rem;">
-                    Esto significa que ${interes > 0 ? 'pagarás' : 'ganarás'} 
-                    <strong>$${interes.toFixed(2)}</strong> 
-                    ${interes > 0 ? 'de interés' : 'por tu ahorro'} 
-                    durante ${t} ${t === 1 ? 'periodo' : 'periodos'}.
-                </p>
-            `;
-            showRes('res-int', html, 'res-success');
-        }
-
-        // 3. Punto de Equilibrio
-        function calcBreakEven() {
-            let cf = getVal('pe-fijos');
-            let p = getVal('pe-precio');
-            let cv = getVal('pe-variable');
-            let margen = p - cv;
-            
-            if(margen <= 0) return showRes('res-pe', 'El precio debe ser mayor al costo variable.', 'res-danger');
-            if(cf <= 0) return showRes('res-pe', 'Ingresa costos fijos válidos.', 'res-danger');
-            
-            let pe = cf / margen;
-            showRes('res-pe', `<div class="res-title">Debes vender: ${Math.ceil(pe)} unidades</div>Para cubrir tus $${cf} de gastos fijos. A partir de la unidad ${Math.ceil(pe)+1} empiezas a ganar.`, 'res-success');
-        }
-
-        // 4. Costo Real
-        function calcRealCost() {
-            let mp = getVal('costo-mp');
-            let mo = getVal('costo-mo');
-            let ci = getVal('costo-ci');
-            let total = mp + mo + ci;
-            
-            if(total <= 0) return showRes('res-costo', 'Ingresa al menos un costo válido.', 'res-danger');
-            
-            showRes('res-costo', `<div class="res-title">Costo Real: $${total.toFixed(2)}</div>Materia Prima: $${mp} | Mano de Obra: $${mo} | Indirectos: $${ci}`, 'res-success');
-        }
-
-        // 5. Precio y Descuentos
-        let currentPrice = 0;
-        let currentCost = 0;
-
-        function calcPrice() {
-            currentCost = getVal('precio-costo');
-            let margin = getVal('precio-margen') / 100;
-            
-            if(margin >= 1) return showRes('res-precio', 'El margen debe ser menor al 100%', 'res-danger');
-            if(currentCost <= 0) return showRes('res-precio', 'Ingresa un costo válido.', 'res-danger');
-
-            currentPrice = currentCost / (1 - margin);
-            let profit = currentPrice - currentCost;
-
-            let html = `<div class="res-title">Precio de Venta: $${currentPrice.toFixed(2)}</div>`;
-            html += `Tu ganancia limpia será: $${profit.toFixed(2)} (${(margin*100).toFixed(0)}%)<br>`;
-            html += `<strong>🛡️ Descuento máximo sin perder: ${(margin*100).toFixed(1)}%</strong>`;
-            
-            showRes('res-precio', html, 'res-success');
-            
-            document.getElementById('discount-section').style.display = 'block';
-            document.getElementById('max-discount-text').innerText = `${(margin*100).toFixed(1)}% (Equivalente a $${profit.toFixed(2)})`;
-        }
-
-        function calcDiscount() {
-            let discount = getVal('desc-prueba');
-            if(currentPrice <= 0) return;
-
-            let finalPrice = currentPrice * (1 - (discount/100));
-            let finalProfit = finalPrice - currentCost;
-            let isSafe = finalProfit >= 0;
-
-            let html = `<div class="res-title">Precio final con descuento: $${finalPrice.toFixed(2)}</div>`;
-            if(isSafe) {
-                html += `✅ <strong>SEGURO:</strong> Aún ganas $${finalProfit.toFixed(2)} por venta.`;
-                showRes('res-descuento', html, 'res-success');
-            } else {
-                html += `❌ <strong>PELIGRO:</strong> Estás perdiendo $${Math.abs(finalProfit).toFixed(2)} por venta.`;
-                showRes('res-descuento', html, 'res-danger');
-            }
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
