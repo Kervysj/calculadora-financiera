@@ -1,275 +1,343 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Financiera Personal</title>
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora Financiera Personal</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <header>
-        <h1>💰 Calculadora Financiera</h1>
-        <p class="subtitle">Domina los números de tu negocio en un clic</p>
-    </header>
+<header>
+<h1>💰 Calculadora Financiera</h1>
+<p class="subtitle">Domina los números de tu negocio en un clic</p>
+</header>
 
-    <!-- VISTA PRINCIPAL: TARJETONES -->
-    <main id="home" class="view active">
-        <div class="grid-cards">
-            <div class="card c1" onclick="showView('calc-roi')">
-                <div class="card-icon">📈</div>
-                <h3>Calcular ROI</h3>
-                <p>¿Qué tan rentable fue mi inversión?</p>
-            </div>
-            <div class="card c2" onclick="showView('calc-interest')">
-                <div class="card-icon">🏦</div>
-                <h3>Calcular Intereses</h3>
-                <p>Préstamos y ahorros</p>
-            </div>
-            <div class="card c3" onclick="showView('calc-breakeven')">
-                <div class="card-icon">⚖️</div>
-                <h3>Punto de Equilibrio</h3>
-                <p>¿Cuánto debo vender para no perder?</p>
-            </div>
-            <div class="card c4" onclick="showView('calc-cost')">
-                <div class="card-icon">📦</div>
-                <h3>Costo Real</h3>
-                <p>El costo oculto de tu producto</p>
-            </div>
-            <div class="card c5" onclick="showView('calc-price')">
-                <div class="card-icon">💎</div>
-                <h3>Precio y Descuentos</h3>
-                <p>Fija tu precio y calcula descuentos seguros</p>
-            </div>
-        </div>
-    </main>
+<main>
+<!-- MENÚ PRINCIPAL -->
+<div id="view-menu" class="view active">
+<div class="grid-cards">
+<div class="card c1" onclick="showView('view-roi')">
+<div class="card-icon">📈</div>
+<h3>Calcular ROI</h3>
+<p>¿Qué tan rentable fue mi inversión?</p>
+</div>
 
-    <!-- VISTA 1: ROI -->
-    <main id="calc-roi" class="view">
-        <div class="detail-box">
-            <button class="btn-back" onclick="showView('home')">⬅ Volver al inicio</button>
-            <h2> Calcular ROI (Retorno de Inversión)</h2>
-            
-            <div class="info-section">
-                <strong>¿Qué es?</strong> Te dice qué tan rentable fue una inversión. Responde: "De cada peso que metí, ¿cuánto me regresó?".
-                <br><br><strong>Ejemplo real:</strong> Inviertes $1,000 en publicidad y te genera $1,500 de ganancia limpia. Tu ROI es del 50%. ¡Valió la pena!
-            </div>
+<div class="card c2" onclick="showView('view-interest')">
+<div class="card-icon">🏦</div>
+<h3>Calcular Intereses</h3>
+<p>Préstamos y ahorros</p>
+</div>
 
-            <div class="formula-box">ROI = [ (Ganancia Neta - Inversión) / Inversión ] × 100</div>
+<div class="card c3" onclick="showView('view-break-even')">
+<div class="card-icon">⚖️</div>
+<h3>Punto de Equilibrio</h3>
+<p>¿Cuánto debo vender para no perder?</p>
+</div>
 
-            <div class="input-group">
-                <label>Inversión Inicial ($)</label>
-                <small>El dinero exacto que gastaste.</small>
-                <input type="number" id="roi-inversion" placeholder="Ej. 1000">
-            </div>
-            <div class="input-group">
-                <label>Ganancia Neta ($)</label>
-                <small>Lo que entró a tu bolsillo después de pagar costos.</small>
-                <input type="number" id="roi-ganancia" placeholder="Ej. 1500">
-            </div>
-            <button class="btn-calc" onclick="calcROI()">Calcular ROI</button>
-            <div id="res-roi" class="result-box"></div>
-        </div>
-    </main>
+<div class="card c4" onclick="showView('view-cost')">
+<div class="card-icon">📦</div>
+<h3>Costo Real</h3>
+<p>El costo oculto de tu producto</p>
+</div>
 
-    <!-- VISTA 2: INTERESES -->
-    <main id="calc-interest" class="view">
-        <div class="detail-box">
-            <button class="btn-back" onclick="showView('home')"> Volver al inicio</button>
-            <h2>🏦 Calculadora de Interés Simple</h2>
-            
-            <div class="info-section">
-                <strong>¿Qué es el interés?</strong> Es el "costo" o "ganancia" del dinero con el tiempo:
-                <ul style="margin: 10px 0 0 20px;">
-                    <li>Si <strong>pides prestado</strong>: Pagas interés (es el costo del préstamo)</li>
-                    <li>Si <strong>ahorras</strong>: Ganas interés (el banco te paga por guardar tu dinero)</li>
-                </ul>
-            </div>
+<div class="card c5" onclick="showView('view-price')">
+<div class="card-icon">💎</div>
+<h3>Precio y Descuentos</h3>
+<p>Fija tu precio y calcula descuentos seguros</p>
+</div>
 
-            <!-- SELECTOR: ¿PRÉSTAMO O AHORRO? -->
-            <div class="selector-box prestamo-box">
-                <label class="selector-title">💭 ¿Qué situación quieres calcular?</label>
-                <div class="selector-options">
-                    <label class="selector-card">
-                        <input type="radio" name="tipo-operacion" value="prestamo" checked>
-                        <div class="selector-card-content">
-                            <div class="selector-card-title red">🔴 Pedir Préstamo</div>
-                            <div class="selector-card-desc">Voy a PAGAR intereses</div>
-                        </div>
-                    </label>
-                    <label class="selector-card">
-                        <input type="radio" name="tipo-operacion" value="ahorro">
-                        <div class="selector-card-content">
-                            <div class="selector-card-title green">🟢 Ahorrar/Invertir</div>
-                            <div class="selector-card-desc">Voy a GANAR intereses</div>
-                        </div>
-                    </label>
-                </div>
-            </div>
+<div class="card c1" onclick="showView('view-liquidez')">
+<div class="card-icon">💧</div>
+<h3>Liquidez del Negocio</h3>
+<p>¿Tienes dinero para pagar tus deudas hoy?</p>
+</div>
+</div>
+</div>
 
-            <!-- SELECTOR: PERÍODO DE LA TASA -->
-            <div class="selector-box periodo-box">
-                <label class="selector-title">️ ¿Cada cuánto se calcula el interés?</label>
-                <div class="selector-options">
-                    <label class="selector-card small">
-                        <input type="radio" name="periodo" value="anual" checked>
-                        <div class="selector-card-content">
-                            <strong>Anual</strong> (por año)
-                        </div>
-                    </label>
-                    <label class="selector-card small">
-                        <input type="radio" name="periodo" value="mensual">
-                        <div class="selector-card-content">
-                            <strong>Mensual</strong> (por mes)
-                        </div>
-                    </label>
-                </div>
-            </div>
+<!-- VISTA 1: ROI -->
+<div id="view-roi" class="view">
+<div class="detail-box">
+<button class="btn-back" onclick="showView('view-menu')">⬅ Volver al inicio</button>
+<h2>📈 Calcular ROI (Retorno de Inversión)</h2>
+<div class="info-section">
+<strong>¿Qué es?</strong> Te dice qué tan rentable fue una inversión. Responde: "De cada peso que metí, ¿cuánto me regresó?".
+<br><br>
+<strong>Ejemplo real:</strong> Inviertes $1,000 en publicidad y te genera $1,500 de ganancia limpia. Tu ROI es del 50%. ¡Valió la pena!
+</div>
+<div class="formula-box">
+ROI = [ (Ganancia Neta - Inversión) / Inversión ] × 100
+</div>
+<div class="input-group">
+<label>Inversión Inicial ($)</label>
+<small>El dinero exacto que gastaste.</small>
+<input type="number" id="roi-inversion" placeholder="Ej: 1000">
+</div>
+<div class="input-group">
+<label>Ganancia Neta ($)</label>
+<small>Lo que entró a tu bolsillo después de pagar costos.</small>
+<input type="number" id="roi-ganancia" placeholder="Ej: 1500">
+</div>
+<button class="btn-calc" onclick="calcROI()">Calcular ROI</button>
+<div id="res-roi" class="result-box"></div>
+</div>
+</div>
 
-            <div class="formula-box">Interés = Capital × Tasa × Tiempo</div>
+<!-- VISTA 2: INTERÉS -->
+<div id="view-interest" class="view">
+<div class="detail-box">
+<button class="btn-back" onclick="showView('view-menu')">⬅ Volver al inicio</button>
+<h2>🏦 Calculadora de Interés Simple</h2>
+<div class="info-section">
+<strong>¿Qué es el interés?</strong> Es el "costo" o "ganancia" del dinero con el tiempo:
+<br><br>
+• Si pides prestado: Pagas interés (es el costo del préstamo)<br>
+• Si ahorras: Ganas interés (el banco te paga por guardar tu dinero)
+</div>
 
-            <div class="input-group">
-                <label>💵 Cantidad de Dinero ($)</label>
-                <small id="label-capital">Cuánto dinero vas a pedir prestado.</small>
-                <input type="number" id="int-capital" placeholder="Ej. 5000">
-            </div>
-            
-            <div class="input-group">
-                <label>📊 Tasa de Interés (%)</label>
-                <small id="label-tasa">El porcentaje que te cobrarán por año.</small>
-                <input type="number" id="int-tasa" placeholder="Ej. 10">
-            </div>
-            
-            <div class="input-group">
-                <label>⏱️ Duración / Tiempo</label>
-                <small id="label-tiempo">Por cuántos años pedirás el préstamo.</small>
-                <input type="number" id="int-tiempo" placeholder="Ej. 2">
-            </div>
+<div class="selector-box prestamo-box">
+<span class="selector-title">💭 ¿Qué situación quieres calcular?</span>
+<div class="selector-options">
+<label class="selector-card">
+<input type="radio" name="tipo-operacion" value="prestamo" checked>
+<div class="selector-card-content">
+<span class="selector-card-title red">🔴 Pedir Préstamo</span>
+<span class="selector-card-desc">Voy a PAGAR intereses</span>
+</div>
+</label>
+<label class="selector-card">
+<input type="radio" name="tipo-operacion" value="ahorro">
+<div class="selector-card-content">
+<span class="selector-card-title green">🟢 Ahorrar/Invertir</span>
+<span class="selector-card-desc">Voy a GANAR intereses</span>
+</div>
+</label>
+</div>
+</div>
 
-            <button class="btn-calc" onclick="calcInterest()">Calcular</button>
-            <div id="res-int" class="result-box"></div>
+<div class="selector-box periodo-box">
+<span class="selector-title">⏱️ ¿Cada cuánto se calcula el interés?</span>
+<div class="selector-options">
+<label class="selector-card small">
+<input type="radio" name="periodo" value="anual" checked>
+<span class="selector-card-title">Anual</span>
+<span class="selector-card-desc">(por año)</span>
+</label>
+<label class="selector-card small">
+<input type="radio" name="periodo" value="mensual">
+<span class="selector-card-title">Mensual</span>
+<span class="selector-card-desc">(por mes)</span>
+</label>
+</div>
+</div>
 
-            <!-- EJEMPLOS -->
-            <div class="example-box">
-                <h4>💡 Ejemplo para entender:</h4>
-                <p><strong>Si pides $1,000 prestados al 10% anual por 1 año:</strong></p>
-                <p>Cálculo: $1,000 × 0.10 × 1 = <strong class="red">$100 de interés</strong></p>
-                <p>Total a devolver: <strong>$1,100</strong> ($1,000 + $100 de interés)</p>
-                <hr>
-                <p><strong>Si ahorras $1,000 al 10% anual por 1 año:</strong></p>
-                <p>Cálculo: $1,000 × 0.10 × 1 = <strong class="green">$100 que ganas</strong></p>
-                <p>Total que tendrás: <strong>$1,100</strong> ($1,000 + $100 de ganancia)</p>
-            </div>
-        </div>
-    </main>
+<div class="formula-box">
+Interés = Capital × Tasa × Tiempo
+</div>
 
-    <!-- VISTA 3: PUNTO DE EQUILIBRIO -->
-    <main id="calc-breakeven" class="view">
-        <div class="detail-box">
-            <button class="btn-back" onclick="showView('home')">⬅ Volver al inicio</button>
-            <h2>️ Punto de Equilibrio</h2>
-            
-            <div class="info-section">
-                <strong>¿Qué es?</strong> La meta mínima de supervivencia. Cuántas unidades debes vender para quedar en ceros (ni ganar ni perder).
-                <br><br><strong>Ejemplo real:</strong> Si tus gastos fijos son $2,000 y ganas $40 por zapato, debes vender 50 zapatos para sobrevivir.
-            </div>
+<div class="input-group">
+<label>💵 Cantidad de Dinero ($)</label>
+<small>Cuánto dinero vas a pedir prestado.</small>
+<input type="number" id="int-capital" placeholder="Ej: 1000">
+</div>
+<div class="input-group">
+<label>📊 Tasa de Interés (%)</label>
+<small>El porcentaje que te cobrarán por año.</small>
+<input type="number" id="int-tasa" placeholder="Ej: 10" step="0.1">
+</div>
+<div class="input-group">
+<label>⏱️ Duración / Tiempo</label>
+<small>Por cuántos años pedirás el préstamo.</small>
+<input type="number" id="int-tiempo" placeholder="Ej: 1" step="0.5">
+</div>
+<button class="btn-calc" onclick="calcInterest()">Calcular</button>
+<div id="res-int" class="result-box"></div>
 
-            <div class="formula-box">PE (Unidades) = Costos Fijos / (Precio - Costo Variable)</div>
+<div class="example-box">
+<h4>💡 Ejemplo para entender:</h4>
+<p><strong>Si pides $1,000 prestados al 10% anual por 1 año:</strong></p>
+<p>Cálculo: $1,000 × 0.10 × 1 = $100 de interés<br>
+Total a devolver: $1,100 ($1,000 + $100 de interés)</p>
+<hr>
+<p><strong>Si ahorras $1,000 al 10% anual por 1 año:</strong></p>
+<p>Cálculo: $1,000 × 0.10 × 1 = $100 que ganas<br>
+Total que tendrás: $1,100 ($1,000 + $100 de ganancia)</p>
+</div>
+</div>
+</div>
 
-            <div class="input-group">
-                <label>Costos Fijos Totales ($)</label>
-                <small>Renta, luz, sueldos fijos (vendas o no vendas).</small>
-                <input type="number" id="pe-fijos" placeholder="Ej. 2000">
-            </div>
-            <div class="input-group">
-                <label>Precio de Venta Unitario ($)</label>
-                <small>A cuánto vendes una unidad.</small>
-                <input type="number" id="pe-precio" placeholder="Ej. 100">
-            </div>
-            <div class="input-group">
-                <label>Costo Variable Unitario ($)</label>
-                <small>Cuánto te cuesta hacer/comprar UNA unidad.</small>
-                <input type="number" id="pe-variable" placeholder="Ej. 60">
-            </div>
-            <button class="btn-calc" onclick="calcBreakEven()">Calcular Punto de Equilibrio</button>
-            <div id="res-pe" class="result-box"></div>
-        </div>
-    </main>
+<!-- VISTA 3: PUNTO DE EQUILIBRIO -->
+<div id="view-break-even" class="view">
+<div class="detail-box">
+<button class="btn-back" onclick="showView('view-menu')">⬅ Volver al inicio</button>
+<h2>⚖️ Punto de Equilibrio</h2>
+<div class="info-section">
+<strong>¿Qué es?</strong> La meta mínima de supervivencia. Cuántas unidades debes vender para quedar en ceros (ni ganar ni perder).
+<br><br>
+<strong>Ejemplo real:</strong> Si tus gastos fijos son $2,000 y ganas $40 por zapato, debes vender 50 zapatos para sobrevivir.
+</div>
+<div class="formula-box">
+PE (Unidades) = Costos Fijos / (Precio - Costo Variable)
+</div>
+<div class="input-group">
+<label>Costos Fijos Totales ($)</label>
+<small>Renta, luz, sueldos fijos (vendas o no vendas).</small>
+<input type="number" id="pe-fijos" placeholder="Ej: 2000">
+</div>
+<div class="input-group">
+<label>Precio de Venta Unitario ($)</label>
+<small>A cuánto vendes una unidad.</small>
+<input type="number" id="pe-precio" placeholder="Ej: 100">
+</div>
+<div class="input-group">
+<label>Costo Variable Unitario ($)</label>
+<small>Cuánto te cuesta hacer/comprar UNA unidad.</small>
+<input type="number" id="pe-variable" placeholder="Ej: 60">
+</div>
+<button class="btn-calc" onclick="calcBreakEven()">Calcular Punto de Equilibrio</button>
+<div id="res-pe" class="result-box"></div>
+</div>
+</div>
 
-    <!-- VISTA 4: COSTO REAL -->
-    <main id="calc-cost" class="view">
-        <div class="detail-box">
-            <button class="btn-back" onclick="showView('home')">⬅ Volver al inicio</button>
-            <h2> Costo Real de un Producto</h2>
-            
-            <div class="info-section">
-                <strong>¿Qué es?</strong> El costo total y oculto. Si solo sumas lo que pagaste al proveedor, perderás dinero.
-                <br><br><strong>Ejemplo real:</strong> Bolsa de cuero $200 + Costura $50 + Caja y luz $30 = Costo real $280.
-            </div>
+<!-- VISTA 4: COSTO REAL -->
+<div id="view-cost" class="view">
+<div class="detail-box">
+<button class="btn-back" onclick="showView('view-menu')">⬅ Volver al inicio</button>
+<h2>📦 Costo Real de un Producto</h2>
+<div class="info-section">
+<strong>¿Qué es?</strong> El costo total y oculto. Si solo sumas lo que pagaste al proveedor, perderás dinero.
+<br><br>
+<strong>Ejemplo real:</strong> Bolsa de cuero $200 + Costura $50 + Caja y luz $30 = Costo real $280.
+</div>
+<div class="formula-box">
+Costo Real = Materia Prima + Mano de Obra + Costos Indirectos
+</div>
+<div class="input-group">
+<label>Materia Prima / Costo de Compra ($)</label>
+<small>Incluye fletes o envíos.</small>
+<input type="number" id="costo-mp" placeholder="Ej: 200">
+</div>
+<div class="input-group">
+<label>Mano de Obra Directa ($)</label>
+<small>Costo de tiempo por unidad. Pon 0 si solo revendes.</small>
+<input type="number" id="costo-mo" placeholder="Ej: 50">
+</div>
+<div class="input-group">
+<label>Costos Indirectos / Empaque ($)</label>
+<small>Un pedacito de renta, luz, etiqueta, bolsa.</small>
+<input type="number" id="costo-ci" placeholder="Ej: 30">
+</div>
+<button class="btn-calc" onclick="calcRealCost()">Calcular Costo Real</button>
+<div id="res-costo" class="result-box"></div>
+</div>
+</div>
 
-            <div class="formula-box">Costo Real = Materia Prima + Mano de Obra + Costos Indirectos</div>
+<!-- VISTA 5: PRECIO Y DESCUENTOS -->
+<div id="view-price" class="view">
+<div class="detail-box">
+<button class="btn-back" onclick="showView('view-menu')">⬅ Volver al inicio</button>
+<h2>💎 Precio de Venta y Descuentos Seguros</h2>
+<div class="info-section">
+<strong>¿Qué es?</strong> Calcula tu precio exacto para ganar el % que quieres. ¡Ojo! No se le suma el % al costo, se usa esta fórmula para que el margen sea real sobre el precio final.
+<br><br>
+<strong>Ejemplo real:</strong> Costo $100, quieres 30% de margen. Precio = 100 / (1 - 0.30) = $142.85.
+</div>
+<div class="formula-box">
+Precio = Costo Total / (1 - % Margen Deseado)
+</div>
 
-            <div class="input-group">
-                <label>Materia Prima / Costo de Compra ($)</label>
-                <small>Incluye fletes o envíos.</small>
-                <input type="number" id="costo-mp" placeholder="Ej. 200">
-            </div>
-            <div class="input-group">
-                <label>Mano de Obra Directa ($)</label>
-                <small>Costo de tiempo por unidad. Pon 0 si solo revendes.</small>
-                <input type="number" id="costo-mo" placeholder="Ej. 50">
-            </div>
-            <div class="input-group">
-                <label>Costos Indirectos / Empaque ($)</label>
-                <small>Un pedacito de renta, luz, etiqueta, bolsa.</small>
-                <input type="number" id="costo-ci" placeholder="Ej. 30">
-            </div>
-            <button class="btn-calc" onclick="calcRealCost()">Calcular Costo Real</button>
-            <div id="res-costo" class="result-box"></div>
-        </div>
-    </main>
+<h3>1. Calcula tu Precio Base</h3>
+<div class="input-group">
+<label>Costo Total del Producto ($)</label>
+<input type="number" id="precio-costo" placeholder="Ej: 100">
+</div>
+<div class="input-group">
+<label>Margen de Ganancia Deseado (%)</label>
+<small>Ej: 30 para ganar el 30%.</small>
+<input type="number" id="precio-margen" placeholder="Ej: 30" step="0.1">
+</div>
+<button class="btn-calc" onclick="calcPrice()">Calcular Precio y Zona de Descuento</button>
+<div id="res-precio" class="result-box"></div>
 
-    <!-- VISTA 5: PRECIO Y DESCUENTOS -->
-    <main id="calc-price" class="view">
-        <div class="detail-box">
-            <button class="btn-back" onclick="showView('home')">⬅ Volver al inicio</button>
-            <h2>💎 Precio de Venta y Descuentos Seguros</h2>
-            
-            <div class="info-section">
-                <strong>¿Qué es?</strong> Calcula tu precio exacto para ganar el % que quieres. <strong>¡Ojo!</strong> No se le suma el % al costo, se usa esta fórmula para que el margen sea real sobre el precio final.
-                <br><br><strong>Ejemplo real:</strong> Costo $100, quieres 30% de margen. Precio = 100 / (1 - 0.30) = $142.85.
-            </div>
+<div id="discount-section" class="discount-section">
+<div class="divider"></div>
+<h3>2. 🛡️ Zona Segura de Descuentos</h3>
+<p>Tu descuento máximo sin perder dinero es: <strong id="max-discount-text">-</strong></p>
+<div class="input-group">
+<label>Prueba tu descuento promocional (%)</label>
+<small>Escribe el % que quieres ofrecer (Ej. Black Friday).</small>
+<input type="number" id="desc-prueba" placeholder="Ej: 20" step="0.1">
+</div>
+<button class="btn-calc" onclick="calcDiscount()">Probar Descuento</button>
+<div id="res-descuento" class="result-box"></div>
+</div>
+</div>
+</div>
 
-            <div class="formula-box">Precio = Costo Total / (1 - % Margen Deseado)</div>
+<!-- VISTA 6: LIQUIDEZ DEL NEGOCIO (NUEVA) -->
+<div id="view-liquidez" class="view">
+<div class="detail-box">
+<button class="btn-back" onclick="showView('view-menu')">⬅ Volver al inicio</button>
+<h2>💧 Liquidez del Negocio</h2>
+<div class="info-section">
+<strong>¿Qué es?</strong> Es saber si tu negocio tiene DINERO SUFICIENTE para pagar todas sus deudas de HOY.
+<br><br>
+Imagina tu negocio como una alcancía. La liquidez te dice: <em>"Si cobro todo lo que me deben hoy, ¿me alcanza para pagar lo que debo?"</em>
+<br><br>
+<strong>Ejemplo con pizza 🍕:</strong><br>
+• Tienes en tu alcancía: $500 (dinero + clientes que te deben + pizzas en el refri)<br>
+• Debes: $300 (al de la harina, al del gas, a tu amigo)<br>
+• <strong>Liquidez = 500 ÷ 300 = 1.67</strong> ✅ ¡Tienes 1.67 veces más de lo que debes! Estás tranquilo.
+</div>
+<div class="formula-box">
+Liquidez = Activo Circulante / Pasivo Circulante
+</div>
 
-            <h3>1. Calcula tu Precio Base</h3>
-            <div class="input-group">
-                <label>Costo Total del Producto ($)</label>
-                <input type="number" id="precio-costo" placeholder="Ej. 100">
-            </div>
-            <div class="input-group">
-                <label>Margen de Ganancia Deseado (%)</label>
-                <small>Ej: 30 para ganar el 30%.</small>
-                <input type="number" id="precio-margen" placeholder="Ej. 30">
-            </div>
-            <button class="btn-calc" onclick="calcPrice()">Calcular Precio y Zona de Descuento</button>
-            <div id="res-precio" class="result-box"></div>
+<div class="info-section" style="border-left-color: #f59e0b; background: #fef3c7;">
+<strong>📚 ¿Qué son estos conceptos?</strong><br><br>
+<strong>Activo Circulante 💰:</strong> Todo lo que se convierte en dinero en menos de 1 año.<br>
+Ejemplo: dinero en caja, banco, mercancía, clientes que te deben.<br><br>
+<strong>Pasivo Circulante 💸:</strong> Todo lo que DEBES pagar en menos de 1 año.<br>
+Ejemplo: deudas a proveedores, tarjetas de crédito, préstamos cortos.
+</div>
 
-            <div id="discount-section" class="discount-section">
-                <div class="divider"></div>
-                <h3>2. ️ Zona Segura de Descuentos</h3>
-                <p>Tu descuento máximo sin perder dinero es: <strong id="max-discount-text"></strong></p>
-                
-                <div class="input-group">
-                    <label>Prueba tu descuento promocional (%)</label>
-                    <small>Escribe el % que quieres ofrecer (Ej. Black Friday).</small>
-                    <input type="number" id="desc-prueba" placeholder="Ej. 20" oninput="calcDiscount()">
-                </div>
-                <div id="res-descuento" class="result-box"></div>
-            </div>
-        </div>
-    </main>
+<div class="input-group">
+<label>💰 Activo Circulante ($)</label>
+<small>Suma de: caja + banco + inventario + cuentas por cobrar.</small>
+<input type="number" id="liq-activo" placeholder="Ej: 50000">
+</div>
+<div class="input-group">
+<label>💸 Pasivo Circulante ($)</label>
+<small>Suma de: deudas a proveedores + tarjetas + préstamos cortos.</small>
+<input type="number" id="liq-pasivo" placeholder="Ej: 30000">
+</div>
+<button class="btn-calc" onclick="calcLiquidez()">Calcular Liquidez</button>
+<div id="res-liq" class="result-box"></div>
 
-    <script src="script.js"></script>
+<div class="example-box">
+<h4>💡 Ejemplo paso a paso:</h4>
+<p><strong>Mi negocio "Pizzas Rápidas" tiene:</strong></p>
+<p>💰 Activo Circulante:<br>
+• Dinero en caja: $5,000<br>
+• En el banco: $10,000<br>
+• Mercancía (harina, queso): $15,000<br>
+• Clientes que me deben: $20,000<br>
+<strong>Total Activo = $50,000</strong></p>
+<hr>
+<p>💸 Pasivo Circulante:<br>
+• Debo al proveedor de harina: $15,000<br>
+• Tarjeta de crédito: $10,000<br>
+• Préstamo bancario (pago este año): $5,000<br>
+<strong>Total Pasivo = $30,000</strong></p>
+<hr>
+<p><strong>Cálculo:</strong> $50,000 ÷ $30,000 = <strong>1.67</strong></p>
+<p>✅ <strong>Interpretación:</strong> Por cada $1 que debo, tengo $1.67 para pagarlo. ¡Mi negocio está sano!</p>
+</div>
+</div>
+</div>
+
+</main>
+
+<script src="script.js"></script>
 </body>
 </html>
